@@ -659,6 +659,7 @@ void CLuaManager::LoadCFunctions ( void )
     CLuaCFunctions::AddFunction ( "guiCreateCheckBox", CLuaFunctionDefs::GUICreateCheckBox );
     CLuaCFunctions::AddFunction ( "guiCreateRadioButton", CLuaFunctionDefs::GUICreateRadioButton );
     CLuaCFunctions::AddFunction ( "guiCreateStaticImage", CLuaFunctionDefs::GUICreateStaticImage );
+    CLuaCFunctions::AddFunction ( "guiCreateComboBox", CLuaFunctionDefs::GUICreateComboBox );
 
     CLuaCFunctions::AddFunction ( "guiStaticImageLoadImage", CLuaFunctionDefs::GUIStaticImageLoadImage );
     CLuaCFunctions::AddFunction ( "guiGetSelectedTab", CLuaFunctionDefs::GUIGetSelectedTab );
@@ -753,6 +754,10 @@ void CLuaManager::LoadCFunctions ( void )
     //CLuaCFunctions::AddFunction ( "guiWindowSetTitleBarEnabled", CLuaFunctionDefs::GUIWindowSetTitleBarEnabled );
 
     CLuaCFunctions::AddFunction ( "getChatboxLayout", CLuaFunctionDefs::GUIGetChatboxLayout );
+
+	CLuaCFunctions::AddFunction ( "guiComboBoxAddItem", CLuaFunctionDefs::GUIComboBoxAddItem );
+	CLuaCFunctions::AddFunction ( "guiComboBoxClear", CLuaFunctionDefs::GUIComboBoxClear );
+	CLuaCFunctions::AddFunction ( "guiComboBoxGetSelected", CLuaFunctionDefs::GUIComboBoxGetSelected );
 
     // Util functions
     CLuaCFunctions::AddFunction ( "gettok", CLuaFunctionDefs::GetTok );

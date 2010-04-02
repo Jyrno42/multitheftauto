@@ -2510,3 +2510,104 @@ int CLuaFunctionDefs::GUIGetChatboxLayout ( lua_State* luaVM )
     lua_pushboolean ( luaVM, false );
     return 1;
 }
+
+int CLuaFunctionDefs::GUICreateComboBox ( lua_State* luaVM )
+{
+    CLuaMain* pLuaMain = m_pLuaManager->GetVirtualMachine ( luaVM );
+    if ( pLuaMain )
+    {
+        if ( lua_istype ( luaVM, 1, LUA_TNUMBER ) && lua_istype ( luaVM, 2, LUA_TNUMBER ) &&
+            lua_istype ( luaVM, 3, LUA_TNUMBER ) && lua_istype ( luaVM, 4, LUA_TNUMBER ) &&
+			lua_istype ( luaVM, 5, LUA_TSTRING ) && lua_istype ( luaVM, 6, LUA_TBOOLEAN ) )
+        {
+            CClientGUIElement* pParent = lua_toguielement ( luaVM, 7 );
+
+            CClientGUIElement* pGUIElement = CStaticFunctionDefinitions::GUICreateComboBox (
+                *pLuaMain,
+                static_cast < float > ( lua_tonumber ( luaVM, 1 ) ),
+                static_cast < float > ( lua_tonumber ( luaVM, 2 ) ),
+                static_cast < float > ( lua_tonumber ( luaVM, 3 ) ),
+                static_cast < float > ( lua_tonumber ( luaVM, 4 ) ),
+                lua_tostring ( luaVM, 5 ),
+                lua_toboolean ( luaVM, 6 ) ? true : false,
+                pParent
+                );
+
+            if ( pGUIElement ) {
+                lua_pushelement ( luaVM, pGUIElement );
+                return 1;
+            }
+        }
+    }
+
+    // error: bad arguments
+    lua_pushboolean ( luaVM, false );
+    return 1;
+}
+
+int CLuaFunctionDefs::GUIComboBoxAddItem ( lua_State* luaVM )
+{
+    CLuaMain* pLuaMain = m_pLuaManager->GetVirtualMachine ( luaVM );
+	bool returnVal = false;
+
+    if ( lua_istype ( luaVM, 1, LUA_TLIGHTUSERDATA ) && lua_istype ( luaVM, 2, LUA_TSTRING )
+	    )
+    {
+		CClientEntity* pEntity = lua_toelement ( luaVM, 1 );
+		if ( pEntity )
+		{
+			returnVal = CStaticFunctionDefinitions::GUIComboBoxAddItem (
+				*pEntity,
+				lua_tostring ( luaVM, 2 )
+				);
+		}
+		else m_pScriptDebugging->LogBadPointer ( luaVM, "guiComboBoxAddItem", "gui-element", 1 );
+    }
+
+    // error: bad arguments
+    lua_pushboolean ( luaVM, returnVal );
+    return 1;
+}
+
+int CLuaFunctionDefs::GUIComboBoxClear ( lua_State* luaVM )
+{
+	bool returnVal = false;
+    if ( lua_istype ( luaVM, 1, LUA_TLIGHTUSERDATA ) )
+    {
+		CClientEntity* pEntity = lua_toelement ( luaVM, 1 );
+		if ( pEntity )
+		{
+			returnVal = CStaticFunctionDefinitions::GUIComboBoxClear (
+				*pEntity
+				);
+		}
+		else m_pScriptDebugging->LogBadPointer ( luaVM, "guiComboBoxClear", "gui-element", 1 );
+    }
+    lua_pushboolean ( luaVM, returnVal );
+    return 1;
+}
+
+int CLuaFunctionDefs::GUIComboBoxGetSelected ( lua_State* luaVM )
+{
+    if ( lua_istype ( luaVM, 1, LUA_TLIGHTUSERDATA ) )
+    {
+		CClientEntity* pEntity = lua_toelement ( luaVM, 1 );
+		if ( pEntity )
+		{
+			std::string strText = CStaticFunctionDefinitions::GUIComboBoxGetSelected( *pEntity );
+			if ( strText.size() > 0 )
+            {
+				lua_pushstring ( luaVM, strText.c_str( ) );
+                return 1;
+            }
+            else
+            {
+                lua_pushnil ( luaVM );
+                return 1;
+            }
+		}
+		else m_pScriptDebugging->LogBadPointer ( luaVM, "guiComboBoxGetSelected", "gui-element", 1 );
+    }
+	lua_pushnil ( luaVM );
+    return 1;
+}

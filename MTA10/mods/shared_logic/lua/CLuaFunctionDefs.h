@@ -573,7 +573,10 @@ public:
     LUA_DECLARE ( GUILabelGetTextExtent );
     LUA_DECLARE ( GUILabelGetFontHeight );
     LUA_DECLARE ( GUIGetChatboxLayout );
-
+    LUA_DECLARE ( GUICreateComboBox );
+    LUA_DECLARE ( GUIComboBoxAddItem );
+    LUA_DECLARE ( GUIComboBoxClear );
+    LUA_DECLARE ( GUIComboBoxGetSelected );
 
     // World functions
     LUA_DECLARE ( GetTime_ );

@@ -3853,6 +3853,81 @@ bool CStaticFunctionDefinitions::GUIDeleteTab ( CLuaMain& LuaMain, CClientGUIEle
     return true;
 }
 
+CClientGUIElement* CStaticFunctionDefinitions::GUICreateComboBox ( CLuaMain& LuaMain, float fX, float fY, float fWidth, float fHeight, const char* szCaption, bool bRelative, CClientGUIElement* pParent )
+{
+    CGUIElement *pElement = m_pGUI->CreateComboBox ( pParent ? pParent->GetCGUIElement () : NULL, szCaption );
+    pElement->SetPosition ( CVector2D ( fX, fY ), bRelative );
+    pElement->SetSize ( CVector2D ( fWidth, fHeight ), bRelative );
+
+    // register to the gui manager
+    CClientGUIElement *pGUIElement = new CClientGUIElement ( m_pManager, &LuaMain, pElement );
+    pGUIElement->SetParent ( pParent ? pParent : LuaMain.GetResource()->GetResourceGUIEntity()  );
+
+    return pGUIElement;
+}
+
+bool CStaticFunctionDefinitions::GUIComboBoxAddItem ( CClientEntity& Entity, const char* szText  )
+{
+	RUN_CHILDREN GUIComboBoxAddItem ( **iter, szText );
+
+	// Are we a CGUI element?
+	if ( IS_GUI ( &Entity ) )
+	{
+		CClientGUIElement& GUIElement = static_cast < CClientGUIElement& > ( Entity );
+
+		// Are we a combobox?
+		if ( IS_CGUIELEMENT_COMBOBOX ( &GUIElement ) )
+		{
+			// Add a new item.
+			CGUIListItem* item = static_cast < CGUIComboBox* > ( GUIElement.GetCGUIElement () ) ->AddItem ( szText );
+			return true;
+		}
+	}    
+
+    return false;
+}
+
+bool CStaticFunctionDefinitions::GUIComboBoxClear ( CClientEntity& Entity  )
+{
+	RUN_CHILDREN GUIComboBoxClear ( **iter );
+
+	// Are we a CGUI element?
+	if ( IS_GUI ( &Entity ) )
+	{
+		CClientGUIElement& GUIElement = static_cast < CClientGUIElement& > ( Entity );
+
+		// Are we a combobox?
+		if ( IS_CGUIELEMENT_COMBOBOX ( &GUIElement ) )
+		{
+			// Clear the combobox
+			static_cast < CGUIComboBox* > ( GUIElement.GetCGUIElement () ) ->Clear ( );
+			return true;
+		}
+	}    
+
+    return false;
+}
+
+std::string CStaticFunctionDefinitions::GUIComboBoxGetSelected ( CClientEntity& Entity )
+{
+	RUN_CHILDREN GUIComboBoxGetSelected ( **iter );
+
+	// Are we a CGUI element?
+	if ( IS_GUI ( &Entity ) )
+	{
+		CClientGUIElement& GUIElement = static_cast < CClientGUIElement& > ( Entity );
+
+		// Are we a combobox?
+		if ( IS_CGUIELEMENT_COMBOBOX ( &GUIElement ) )
+		{
+			// return the selected...
+			CGUIListItem * item = static_cast < CGUIComboBox* > ( GUIElement.GetCGUIElement () ) ->GetSelectedItem ( );
+			if( item ) return item->GetText( );
+		}
+	}    
+
+    return "";
+}
 
 void CStaticFunctionDefinitions::GUISetText ( CClientEntity& Entity, const char* szText )
 {

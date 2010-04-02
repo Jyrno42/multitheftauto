@@ -50,6 +50,9 @@ CGUIComboBox_Impl::CGUIComboBox_Impl ( CGUI_Impl* pGUI, CGUIElement* pParent, co
         pGUI->AddChild ( this );
         SetParent ( NULL );
     }
+
+	// Disable editing of the box...
+	SetReadOnly ( true );
 }
 
 

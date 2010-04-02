@@ -302,6 +302,8 @@ public:
     static CClientGUIElement*           GUICreateCheckBox                   ( CLuaMain& LuaMain, float fX, float fY, float fWidth, float fHeight, const char* szCaption, bool bChecked, bool bRelative, CClientGUIElement* pParent );
     static CClientGUIElement*           GUICreateRadioButton                ( CLuaMain& LuaMain, float fX, float fY, float fWidth, float fHeight, const char* szCaption, bool bRelative, CClientGUIElement* pParent );
     static CClientGUIElement*           GUICreateStaticImage                ( CLuaMain& LuaMain, float fX, float fY, float fWidth, float fHeight, const SString& strFile, bool bRelative, CClientGUIElement* pParent );
+	static CClientGUIElement*           GUICreateComboBox                   ( CLuaMain& LuaMain, float fX, float fY, float fWidth, float fHeight, const char* szCaption, bool bRelative, CClientGUIElement* pParent );
+	
     
     static bool                         GUIStaticImageLoadImage             ( CClientEntity& Element, const SString& strDir );
 
@@ -367,6 +369,10 @@ public:
     static void                         GUILabelSetColor                    ( CClientEntity& Element, int iR, int iG, int iB );
     static void                         GUILabelSetVerticalAlign            ( CClientEntity& Element, CGUIVerticalAlign eAlign );
     static void                         GUILabelSetHorizontalAlign          ( CClientEntity& Element, CGUIHorizontalAlign eAlign );
+
+	static bool                         GUIComboBoxAddItem                  ( CClientEntity& Entity, const char* szText );
+	static bool                         GUIComboBoxClear                    ( CClientEntity& Entity );
+	static std::string                  GUIComboBoxGetSelected              ( CClientEntity& Entity );
 
     // World functions
     static bool                         GetTime                             ( unsigned char &ucHour, unsigned char &ucMin );
