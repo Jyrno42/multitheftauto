@@ -756,8 +756,13 @@ void CLuaManager::LoadCFunctions ( void )
     CLuaCFunctions::AddFunction ( "getChatboxLayout", CLuaFunctionDefs::GUIGetChatboxLayout );
 
 	CLuaCFunctions::AddFunction ( "guiComboBoxAddItem", CLuaFunctionDefs::GUIComboBoxAddItem );
+	CLuaCFunctions::AddFunction ( "guiComboBoxRemoveItem", CLuaFunctionDefs::GUIComboBoxRemoveItem );
 	CLuaCFunctions::AddFunction ( "guiComboBoxClear", CLuaFunctionDefs::GUIComboBoxClear );
 	CLuaCFunctions::AddFunction ( "guiComboBoxGetSelected", CLuaFunctionDefs::GUIComboBoxGetSelected );
+	CLuaCFunctions::AddFunction ( "guiComboBoxSetSelected", CLuaFunctionDefs::GUIComboBoxSetSelected );
+	CLuaCFunctions::AddFunction ( "guiComboBoxGetItemText", CLuaFunctionDefs::GUIComboBoxGetItemText );
+	CLuaCFunctions::AddFunction ( "guiComboBoxSetItemText", CLuaFunctionDefs::GUIComboBoxSetItemText );
+
 
     // Util functions
     CLuaCFunctions::AddFunction ( "gettok", CLuaFunctionDefs::GetTok );

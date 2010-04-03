@@ -575,8 +575,12 @@ public:
     LUA_DECLARE ( GUIGetChatboxLayout );
     LUA_DECLARE ( GUICreateComboBox );
     LUA_DECLARE ( GUIComboBoxAddItem );
+    LUA_DECLARE ( GUIComboBoxRemoveItem );
     LUA_DECLARE ( GUIComboBoxClear );
     LUA_DECLARE ( GUIComboBoxGetSelected );
+    LUA_DECLARE ( GUIComboBoxSetSelected );
+    LUA_DECLARE ( GUIComboBoxGetItemText );
+    LUA_DECLARE ( GUIComboBoxSetItemText );
 
     // World functions
     LUA_DECLARE ( GetTime_ );

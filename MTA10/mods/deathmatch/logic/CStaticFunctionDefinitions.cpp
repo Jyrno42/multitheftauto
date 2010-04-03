@@ -3858,6 +3858,10 @@ CClientGUIElement* CStaticFunctionDefinitions::GUICreateComboBox ( CLuaMain& Lua
     CGUIElement *pElement = m_pGUI->CreateComboBox ( pParent ? pParent->GetCGUIElement () : NULL, szCaption );
     pElement->SetPosition ( CVector2D ( fX, fY ), bRelative );
     pElement->SetSize ( CVector2D ( fWidth, fHeight ), bRelative );
+    
+    // Disable editing of the box...
+    //CClientGUIElement& GUIElement = static_cast < CClientGUIElement& > ( pElement );
+    static_cast < CGUIComboBox* > ( pElement ) -> SetReadOnly ( true );
 
     // register to the gui manager
     CClientGUIElement *pGUIElement = new CClientGUIElement ( m_pManager, &LuaMain, pElement );
@@ -3866,67 +3870,147 @@ CClientGUIElement* CStaticFunctionDefinitions::GUICreateComboBox ( CLuaMain& Lua
     return pGUIElement;
 }
 
-bool CStaticFunctionDefinitions::GUIComboBoxAddItem ( CClientEntity& Entity, const char* szText  )
+int CStaticFunctionDefinitions::GUIComboBoxAddItem ( CClientEntity& Entity, const char* szText )
 {
-	RUN_CHILDREN GUIComboBoxAddItem ( **iter, szText );
+    RUN_CHILDREN GUIComboBoxAddItem ( **iter, szText );
 
-	// Are we a CGUI element?
-	if ( IS_GUI ( &Entity ) )
-	{
-		CClientGUIElement& GUIElement = static_cast < CClientGUIElement& > ( Entity );
+    // Are we a CGUI element?
+    if ( IS_GUI ( &Entity ) )
+    {
+        CClientGUIElement& GUIElement = static_cast < CClientGUIElement& > ( Entity );
 
-		// Are we a combobox?
-		if ( IS_CGUIELEMENT_COMBOBOX ( &GUIElement ) )
-		{
-			// Add a new item.
-			CGUIListItem* item = static_cast < CGUIComboBox* > ( GUIElement.GetCGUIElement () ) ->AddItem ( szText );
-			return true;
-		}
-	}    
+        // Are we a combobox?
+        if ( IS_CGUIELEMENT_COMBOBOX ( &GUIElement ) )
+        {
+            // Add a new item.
+            CGUIListItem* item = static_cast < CGUIComboBox* > ( GUIElement.GetCGUIElement () ) -> AddItem ( szText );
+            // Return it's id + 1 so indexes start at 1.
+            return static_cast < CGUIComboBox* > ( GUIElement.GetCGUIElement () ) -> GetItemIndex ( item ) + 1;
+        }
+    }    
+
+    return 0;
+}
+
+bool CStaticFunctionDefinitions::GUIComboBoxRemoveItem ( CClientEntity& Entity, int index )
+{
+    RUN_CHILDREN GUIComboBoxRemoveItem ( **iter, index );
+
+    // Are we a CGUI element?
+    if ( IS_GUI ( &Entity ) )
+    {
+        CClientGUIElement& GUIElement = static_cast < CClientGUIElement& > ( Entity );
+
+        // Are we a combobox?
+        if ( IS_CGUIELEMENT_COMBOBOX ( &GUIElement ) )
+        {
+            // Call RemoveItem with index - 1 so indexes are compatible internally ...
+            return static_cast < CGUIComboBox* > ( GUIElement.GetCGUIElement () ) -> RemoveItem( index - 1 );
+        }
+    }    
 
     return false;
 }
 
 bool CStaticFunctionDefinitions::GUIComboBoxClear ( CClientEntity& Entity  )
 {
-	RUN_CHILDREN GUIComboBoxClear ( **iter );
+    RUN_CHILDREN GUIComboBoxClear ( **iter );
 
-	// Are we a CGUI element?
-	if ( IS_GUI ( &Entity ) )
-	{
-		CClientGUIElement& GUIElement = static_cast < CClientGUIElement& > ( Entity );
+    // Are we a CGUI element?
+    if ( IS_GUI ( &Entity ) )
+    {
+        CClientGUIElement& GUIElement = static_cast < CClientGUIElement& > ( Entity );
 
-		// Are we a combobox?
-		if ( IS_CGUIELEMENT_COMBOBOX ( &GUIElement ) )
-		{
-			// Clear the combobox
-			static_cast < CGUIComboBox* > ( GUIElement.GetCGUIElement () ) ->Clear ( );
-			return true;
-		}
-	}    
+        // Are we a combobox?
+        if ( IS_CGUIELEMENT_COMBOBOX ( &GUIElement ) )
+        {
+            // Clear the combobox
+            static_cast < CGUIComboBox* > ( GUIElement.GetCGUIElement () ) ->Clear ( );
+            return true;
+        }
+    }    
 
     return false;
 }
 
-std::string CStaticFunctionDefinitions::GUIComboBoxGetSelected ( CClientEntity& Entity )
+int CStaticFunctionDefinitions::GUIComboBoxGetSelected ( CClientEntity& Entity )
 {
-	RUN_CHILDREN GUIComboBoxGetSelected ( **iter );
+    RUN_CHILDREN GUIComboBoxGetSelected ( **iter );
 
-	// Are we a CGUI element?
-	if ( IS_GUI ( &Entity ) )
-	{
-		CClientGUIElement& GUIElement = static_cast < CClientGUIElement& > ( Entity );
+    // Are we a CGUI element?
+    if ( IS_GUI ( &Entity ) )
+    {
+        CClientGUIElement& GUIElement = static_cast < CClientGUIElement& > ( Entity );
 
-		// Are we a combobox?
-		if ( IS_CGUIELEMENT_COMBOBOX ( &GUIElement ) )
-		{
-			// return the selected...
-			CGUIListItem * item = static_cast < CGUIComboBox* > ( GUIElement.GetCGUIElement () ) ->GetSelectedItem ( );
-			if( item ) return item->GetText( );
-		}
-	}    
+        // Are we a combobox?
+        if ( IS_CGUIELEMENT_COMBOBOX ( &GUIElement ) )
+        {
+            // return the selected + 1 so indexes start at 1...
+            return static_cast < CGUIComboBox* > ( GUIElement.GetCGUIElement () ) ->GetSelectedItemIndex ( ) + 1;
+        }
+    }    
 
-    return "";
+    return 0;
+}
+
+bool CStaticFunctionDefinitions::GUIComboBoxSetSelected ( CClientEntity& Entity, int index )
+{
+    RUN_CHILDREN GUIComboBoxSetSelected ( **iter, index );
+
+    // Are we a CGUI element?
+    if ( IS_GUI ( &Entity ) )
+    {
+        CClientGUIElement& GUIElement = static_cast < CClientGUIElement& > ( Entity );
+
+        // Are we a combobox?
+        if ( IS_CGUIELEMENT_COMBOBOX ( &GUIElement ) )
+        {
+            // Call SetSelectedItem with index - 1 so indexes are compatible internally ...
+            return static_cast < CGUIComboBox* > ( GUIElement.GetCGUIElement () ) -> SetSelectedItemByIndex( index - 1 );
+        }
+    }    
+
+    return false;
+}
+
+std::string CStaticFunctionDefinitions::GUIComboBoxGetItemText ( CClientEntity& Entity, int index )
+{
+    RUN_CHILDREN GUIComboBoxGetItemText ( **iter, index );
+
+    // Are we a CGUI element?
+    if ( IS_GUI ( &Entity ) )
+    {
+        CClientGUIElement& GUIElement = static_cast < CClientGUIElement& > ( Entity );
+
+        // Are we a combobox?
+        if ( IS_CGUIELEMENT_COMBOBOX ( &GUIElement ) )
+        {
+            // Call GetItemText with index - 1 so indexes are compatible internally ...
+            return static_cast < CGUIComboBox* > ( GUIElement.GetCGUIElement () ) -> GetItemText( index - 1 );
+        }
+    }    
+
+    return NULL;
+}
+
+bool CStaticFunctionDefinitions::GUIComboBoxSetItemText ( CClientEntity& Entity, int index, const char* szText )
+{
+    RUN_CHILDREN GUIComboBoxSetItemText ( **iter, index, szText );
+
+    // Are we a CGUI element?
+    if ( IS_GUI ( &Entity ) )
+    {
+        CClientGUIElement& GUIElement = static_cast < CClientGUIElement& > ( Entity );
+
+        // Are we a combobox?
+        if ( IS_CGUIELEMENT_COMBOBOX ( &GUIElement ) )
+        {
+            // Call SetItemText with index - 1 so indexes are compatible internally ...
+            return static_cast < CGUIComboBox* > ( GUIElement.GetCGUIElement () ) -> SetItemText( index - 1, szText );
+        }
+    }    
+
+    return false;
 }
 
 void CStaticFunctionDefinitions::GUISetText ( CClientEntity& Entity, const char* szText )
